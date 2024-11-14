@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import TextField from '@mui/material/TextField';
-import Fab from '@mui/material/Fab';
+import { TextField, Fab, Button } from '@mui/material';
+import { CameraEnhanceOutlined, ChangeCircleOutlined } from '@mui/icons-material';
 
 const MainBox = styled.div`
     width: 600px;
@@ -19,6 +19,7 @@ const BoxHeader = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     margin-top: 32px;
     position: relative;
     
@@ -26,17 +27,6 @@ const BoxHeader = styled.div`
 const Title = styled.a`
     font-size: 36px;
     white-space: nowrap;
-    margin-left: 250px;
-    position: absolute;
-`
-
-const ChangeButton = styled.button`
-    width: 98px;
-    height: 98px;
-    border-radius: 50%;
-    border: solid 1px;
-    margin-left: 552px;
-    position: absolute;
 `
 
 const InputBox = styled.div`
@@ -49,24 +39,7 @@ const InputBox = styled.div`
     justify-content: center;
 `
 
-const Input = styled.input`
-    width: 500px;
-    height: 44px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: 18px;
-`
-
-const Signin = styled.button`
-    width: 160px;
-    height: 60px;
-    margin-top: 12px;
-    border-radius: 10px;
-    border: solid 1px;
-`
-
-export default function SignIn() {
-    const [selected, setSelected] = React.useState(false);
+export default function SignIn({ changeState }) {
     const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [password, setPassword] = useState('');
@@ -89,6 +62,11 @@ export default function SignIn() {
         setIsPasswordValid(value.length <= 0);
     };
 
+    // 로그인 버튼 클릭시 처리
+    const handleLogin = () => {
+        alert("이메일: "+ email+"\n"+"비번: " + password)
+    }
+
     return (
         <>
             <MainBox>
@@ -97,8 +75,9 @@ export default function SignIn() {
                     <Fab
                         color="primary"
                         aria-label="add"
-                        onClick={setSelected}
-                        sx={{ width: '98px', height: '98px', marginLeft: '552px', position: 'absolute' }}>
+                        onClick={()=>{changeState()}}
+                        sx={{ width: '98px', height: '98px', marginLeft: '600px', position: 'absolute' }}>
+                        <ChangeCircleOutlined sx={{ width: '88px', height: '88px' }} />
                     </Fab>
                 </BoxHeader>
                 <InputBox>
@@ -118,11 +97,17 @@ export default function SignIn() {
                         variant="outlined"
                         value={password}
                         onChange={handlePasswordChange}
-                        error={isPasswordValid && password == ''}
-                        helperText={isPasswordValid && password == '' ? "비밀번호가 입력되지 않았습니다." : ""}
+                        error={isPasswordValid && password === ''}
+                        helperText={isPasswordValid && password === '' ? "비밀번호가 입력되지 않았습니다." : ""}
                     />
                 </InputBox>
-                <Signin />
+                <Button
+                    variant="contained"
+                    onClick={() => {handleLogin()}}
+                    sx={{ width: '130px', height: '60px', marginTop: '15px', borderRadius: '25px', fontSize: '24px', backgroundColor: 'brown'}}
+                    endIcon={<CameraEnhanceOutlined/>}>
+                    로긴
+                </Button>
             </MainBox >
         </>
     )

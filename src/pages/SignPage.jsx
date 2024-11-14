@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import SignIn from '../components/member/SignIn';
 import SignUp from '../components/member/SignUp';
@@ -13,12 +13,16 @@ const MainDiv = styled.div`
 
 export default function SignPage() {
 
-    var state = true;
+    const [signState, setSignState] = useState(true);
+
+    const handleState = () => {
+        setSignState(!signState);
+    }
 
     return (
         <>
             <MainDiv>
-                { state ? <SignIn></SignIn> : <SignUp></SignUp>}
+                { signState ? <SignIn changeState={handleState}/> : <SignUp changeState={handleState}/>}
             </MainDiv>
         </>
     )
