@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Main from '../components/main/Main';
 import Header from '../components/main/Header';
+import Home from '../components/home/Home';
 
 const MainDiv = styled.div`
         height: 1080px;
@@ -9,21 +10,6 @@ const MainDiv = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-`
-const Home = styled.div`
-    width: 250px;
-    height: 250px;
-    background-color: red;
-`
-const Board = styled.div`
-    width: 250px;
-    height: 250px;
-    background-color: yellow;
-`
-const Vote = styled.div`
-    width: 250px;
-    height: 250px;
-    background-color: green;
 `
 
 export default function MainPage() {
@@ -50,11 +36,11 @@ export default function MainPage() {
     return(
         <>
             <MainDiv>
-                <Header/>
+                <Header login={true}/>
                 <Main home={handleHome} board={handleBoard} vote={handleVote}>
                     {home && <Home/>}
-                    {board && <Board/>}
-                    {vote && <Vote/>}
+                    {board && <></>}
+                    {vote && <></>}
                 </Main>
             </MainDiv>
         </>

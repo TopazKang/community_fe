@@ -25,6 +25,9 @@ const SpringDiv = styled.div`
 const Div = styled.div`
     width: 1450px;
     height: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `
 const ButtonDiv = styled.div`
     width: 96px;
