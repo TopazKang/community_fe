@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Main from '../components/main/Main'
+import Main from '../components/main/Main';
+import Header from '../components/main/Header';
 
 const MainDiv = styled.div`
         height: 1080px;
@@ -49,6 +50,7 @@ export default function MainPage() {
     return(
         <>
             <MainDiv>
+                <Header/>
                 <Main home={handleHome} board={handleBoard} vote={handleVote}>
                     {home && <Home/>}
                     {board && <Board/>}

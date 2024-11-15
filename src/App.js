@@ -6,7 +6,7 @@ import Ring from './components/main/Ring';
 function App() {
   return (
     <div>
-      <MainPage></MainPage>
+      <MainPage/>
     </div>
   );
 }
