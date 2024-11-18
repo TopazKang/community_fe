@@ -39,8 +39,41 @@ const ButtonDiv = styled.div`
     position: absolute;
     margin-left: 1560px;
 `
+// 페이지 타이틀
+const TitleBox = styled.div`
+    width: 1313px;
+    height: 97px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+`
+// 타이틀 글자
+const Title = styled.a`
+    font-family: 'Ainmom';
+    font-size: 30px;
+`
+// 타이틀 날짜
+const Date = styled.a`
+    font-family: 'Ainmom';
+    color: gray;
+    font-size: 24px;
+    position: absolute;
+    margin-left: 1260px;
+    margin-top: 55px;
+`
+// 수평선
+const HalfLine = styled.hr`
+    width: 1313px;
+    height: 1px;
+    border: 0px;
+    background-color: gray;
+    position: absolute;
+    margin-top: 93px;
+`
 
-export default function Main({home, board, vote, children}) {
+export default function Main({ home, board, vote, children, title }) {
     return (
         <>
             <MainDiv>
@@ -51,25 +84,32 @@ export default function Main({home, board, vote, children}) {
                     <Ring />
                     <Ring />
                 </SpringDiv>
-                <Div>{children}</Div>
+                <Div>
+                    <TitleBox>
+                        <Title>{title}</Title>
+                        <Date>24.11.01</Date>
+                        <HalfLine />
+                    </TitleBox>
+                    {children}
+                </Div>
                 <ButtonDiv>
-                    <Button 
-                    onClick={home}
-                    sx={{width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0'}}>
+                    <Button
+                        onClick={home}
+                        sx={{ width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0' }}>
                         <Home
-                        sx={{width: '80px', height: '80px'}}/>
+                            sx={{ width: '80px', height: '80px' }} />
                     </Button>
                     <Button
-                    onClick={board}
-                    sx={{width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0'}}>
+                        onClick={board}
+                        sx={{ width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0' }}>
                         <PhotoLibrary
-                        sx={{width: '80px', height: '80px'}}/>
+                            sx={{ width: '80px', height: '80px' }} />
                     </Button>
                     <Button
-                    onClick={vote}
-                    sx={{width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0'}}>
+                        onClick={vote}
+                        sx={{ width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0' }}>
                         <HowToVote
-                        sx={{width: '80px', height: '80px'}}/>
+                            sx={{ width: '80px', height: '80px' }} />
                     </Button>
                 </ButtonDiv>
             </MainDiv>

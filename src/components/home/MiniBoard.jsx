@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const MainDiv = styled.div`
     width: 598px;
-    height: 320px;
+    height: 330px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -12,7 +12,7 @@ const MainDiv = styled.div`
 // 타이틀 박스
 const TitleBox = styled.div`
     width: 598px;
-    height: 120px;
+    height: 130px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,7 @@ const TitleBox = styled.div`
 `
 // 타이틀
 const Title = styled.div`
-    font-size: 24px;
+    font-size: 28px;
     font-family: 'Ainmom';
 `
 // 카드 리스트
@@ -37,13 +37,14 @@ const Card = styled.div`
     width: 195px;
     height: 195px;
     background-color: gray;
+    border-radius: 15px;
 `
 
-export default function MiniBoard() {
+export default function MiniBoard({title}) {
     return(
         <MainDiv>
             <TitleBox>
-                <Title>이름</Title>
+                <Title>{title}</Title>
             </TitleBox>
             <CardBox>
                 <Card></Card>
