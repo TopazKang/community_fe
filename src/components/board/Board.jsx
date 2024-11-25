@@ -62,15 +62,15 @@ export default function Board() {
 
                 </ButtonBox>
                 <CardBox>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
-                    <BoardCard></BoardCard>
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }, {tag: "d"}]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
                 </CardBox>
                 <PageBox>
 

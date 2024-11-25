@@ -109,27 +109,25 @@ const CountBox = styled.div`
     align-items: center;
 `
 
-export default function BoardCard() {
+export default function BoardCard({ title, content, tagList, profileImage, writer, count }) {
 
-    return(
+    return (
         <MainDiv>
             <Image></Image>
             <InfoBox>
-                <Title>제목이에오</Title>
-                <Content>이건 글이라오 이건 글이라오 이건 글이라오 이건 글이라오 이건 글이라오</Content>
+                <Title>{title}</Title>
+                <Content>{content}</Content>
                 <TagBox>
-                    <Tag><TagText>#태그</TagText></Tag>
-                    <Tag><TagText>#태그</TagText></Tag>
-                    <Tag><TagText>#태그</TagText></Tag>
+                    {tagList.map((tag) => (<Tag><TagText>#{tag.tag}</TagText></Tag>))}
                 </TagBox>
                 <Footer>
                     <WriterBox>
                         <ProfileImage></ProfileImage>
-                        <Text>작성자</Text>
+                        <Text>{writer}</Text>
                     </WriterBox>
                     <CountBox>
-                        <Favorite sx={{width: '30px', height: '30px'}}/>
-                        <Text>22</Text>
+                        <Favorite sx={{ width: '30px', height: '30px' }} />
+                        <Text>{count}</Text>
                     </CountBox>
                 </Footer>
             </InfoBox>
