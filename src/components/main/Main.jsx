@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Ring from './Ring';
 import { Button } from '@mui/material';
-import { Home, PhotoLibrary, HowToVote } from '@mui/icons-material'
+import { Home, PhotoLibrary, HowToVote, Replay } from '@mui/icons-material'
 
 const MainDiv = styled.div`
         width: 1560px;
@@ -73,7 +73,7 @@ const HalfLine = styled.hr`
     margin-top: 93px;
 `
 
-export default function Main({ home, board, vote, children, title }) {
+export default function Main({ home, board, vote, content, children, title }) {
     return (
         <>
             <MainDiv>
@@ -111,6 +111,12 @@ export default function Main({ home, board, vote, children, title }) {
                         <HowToVote
                             sx={{ width: '80px', height: '80px' }} />
                     </Button>
+                    {content && <Button
+                        onClick={content}
+                        sx={{ width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0' }}>
+                        <Replay
+                            sx={{ width: '80px', height: '80px' }} />
+                    </Button>}
                 </ButtonDiv>
             </MainDiv>
         </>
