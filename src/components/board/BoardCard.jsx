@@ -109,10 +109,14 @@ const CountBox = styled.div`
     align-items: center;
 `
 
-export default function BoardCard({ title, content, tagList, profileImage, writer, count }) {
+export default function BoardCard({id, title, content, tagList, profileImage, writer, count }) {
 
+    const readPost = () => {
+        alert(id);
+    }
+    
     return (
-        <MainDiv>
+        <MainDiv onClick={readPost}>
             <Image></Image>
             <InfoBox>
                 <Title>{title}</Title>

@@ -55,6 +55,9 @@ const PageBox = styled.div`
 
 
 export default function Board() {
+
+
+
     return (
         <MainDiv>
             <BodyBox>
@@ -62,15 +65,15 @@ export default function Board() {
 
                 </ButtonBox>
                 <CardBox>
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }, {tag: "d"}]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="1" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }, {tag: "d"}]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="2" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="3" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="4" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="5" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="6" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="7" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="8" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    <BoardCard id="9" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
                 </CardBox>
                 <PageBox>
 
