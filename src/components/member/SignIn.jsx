@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { TextField, Fab, Button } from '@mui/material';
 import { CameraEnhanceOutlined, ChangeCircleOutlined } from '@mui/icons-material';
+import { useNavigate } from "react-router-dom";
 
 const MainBox = styled.div`
     width: 600px;
@@ -45,6 +46,8 @@ export default function SignIn({ changeState }) {
     const [password, setPassword] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState(false);
 
+    const navigate = useNavigate();
+
     const handleEmailChange = (event) => {
         const value = event.target.value;
         setEmail(value);
@@ -65,6 +68,7 @@ export default function SignIn({ changeState }) {
     // 로그인 버튼 클릭시 처리
     const handleLogin = () => {
         alert("이메일: "+ email+"\n"+"비번: " + password)
+        navigate('/');
     }
 
     return (

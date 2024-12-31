@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Camera, AccountCircle } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const MainDiv = styled.div`
     width: 1920px;
@@ -20,12 +21,18 @@ const Title = styled.a`
 
 export default function Header({ login }) {
 
+    const navigate = useNavigate();
+
+    const home = () => {
+        navigate('/');
+    }
+
     return (
         <>
             <MainDiv>
                 <Camera sx={{ width: '45px', height: "45px", marginTop: "10px", marginRight: "15px"}} />
-                <Title>셔터</Title>
-                {login && <AccountCircle sx={{ width: '55px', height: "55px", position: "absolute", marginLeft: '1400px', marginTop: '10px' }} />}
+                <Title onClick={home}>셔터</Title>
+                {login && <AccountCircle onClick={()=> {alert('hel')}} sx={{ width: '55px', height: "55px", position: "absolute", marginLeft: '1400px', marginTop: '10px' }} />}
             </MainDiv>
         </>
     )

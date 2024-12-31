@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { TextField, Fab, Button } from '@mui/material';
 import { CameraEnhanceOutlined, ChangeCircleOutlined } from '@mui/icons-material';
+import { useNavigate } from "react-router-dom";
 
 // 메인 구획
 const MainBox = styled.div`
@@ -81,6 +82,8 @@ export default function SignUP({ changeState }) {
     const [password, setPassword] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState(false);
 
+    const navigate = useNavigate();
+
     const handleNameChange = (event) => {
         const value = event.target.value;
         setName(value);
@@ -113,8 +116,9 @@ export default function SignUP({ changeState }) {
     };
 
     // 회원가입 버튼 클릭시 처리
-    const handleLogin = () => {
+    const handleRegister = () => {
         alert("이름: "+name+"\n"+"닉네임: "+nickname+"\n"+"이메일: " + email + "\n"+"비번: "+ password)
+        navigate("/auth/signIn");
     }
 
     return (
@@ -188,7 +192,7 @@ export default function SignUP({ changeState }) {
                 </InputBox>
                 <Button
                     variant="contained"
-                    onClick={() => { handleLogin() }}
+                    onClick={() => { handleRegister() }}
                     sx={{ width: '130px', height: '60px', marginTop: '5px', borderRadius: '25px', fontSize: '24px', backgroundColor: 'brown' }}
                     endIcon={<CameraEnhanceOutlined />}>
                     로긴

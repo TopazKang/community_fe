@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import BoardCard from './BoardCard';
+import { useNavigate } from 'react-router-dom';
+import { Edit } from '@mui/icons-material';
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -23,13 +25,33 @@ const BodyBox = styled.div`
 // 버튼 박스
 const ButtonBox = styled.div`
     width: 1313px;
-    height: 41px;
+    height: 40px;
     display: flex;
     flex-direction: row;
     justify-content: end;
     align-items: center;
-
-    border: solid 1px;
+`
+const Dropdown = styled.div`
+    width: 119px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+const EditButton = styled.div`
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: gray;
+    margin-left: 5px;
+    margin-right: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `
 // 카드 빅스
 const CardBox = styled.div`
@@ -37,7 +59,8 @@ const CardBox = styled.div`
     height: 637px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+    column-gap: 16px;
     flex-wrap: wrap;
     align-content: flex-start;
 `
@@ -56,13 +79,18 @@ const PageBox = styled.div`
 
 export default function Board() {
 
+    const navigate = useNavigate();
 
+    const create = () => {
+        navigate("/standard-page/create");
+    }
 
     return (
         <MainDiv>
             <BodyBox>
                 <ButtonBox>
-
+                    <Dropdown>카테고리</Dropdown>
+                    <EditButton onClick={create}><Edit sx={{ width: '35px', height: '35px' }} /></EditButton>
                 </ButtonBox>
                 <CardBox>
                     <BoardCard id="1" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }, {tag: "d"}]} profileImage={""} writer={"작성자"} count={"22"} />

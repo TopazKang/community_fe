@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Favorite } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const MainDiv = styled.div`
     width: 427px;
@@ -111,8 +112,10 @@ const CountBox = styled.div`
 
 export default function BoardCard({id, title, content, tagList, profileImage, writer, count }) {
 
+    const navigate = useNavigate();
+
     const readPost = () => {
-        alert(id);
+        navigate(`/standard-page/:${id}}`);
     }
     
     return (
