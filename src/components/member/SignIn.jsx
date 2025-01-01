@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { TextField, Fab, Button } from '@mui/material';
 import { CameraEnhanceOutlined, ChangeCircleOutlined } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
+import { API } from "../../apis/routes";
 
 const MainBox = styled.div`
     width: 600px;
@@ -67,8 +68,35 @@ export default function SignIn({ changeState }) {
 
     // 로그인 버튼 클릭시 처리
     const handleLogin = () => {
-        alert("이메일: "+ email+"\n"+"비번: " + password)
-        navigate('/');
+        login();
+    }
+
+    async function login() {
+
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+
+        try {
+            const response = await fetch(API.LOGIN, {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                body: formData
+            })
+
+            if (response.ok) {
+                console.log("로그인 성공")
+                localStorage.setItem('accessToken', response.headers.get('Authorization').split(" ")[1]);
+                navigate("/");
+            }
+            else {
+                console.log("로그인 실패")
+            }
+        }
+        catch (err) {
+            console.log("로그인 오류 발생", err)
+        }
     }
 
     return (
@@ -79,7 +107,7 @@ export default function SignIn({ changeState }) {
                     <Fab
                         color="primary"
                         aria-label="add"
-                        onClick={()=>{changeState()}}
+                        onClick={() => { changeState() }}
                         sx={{ width: '98px', height: '98px', marginLeft: '600px', position: 'absolute' }}>
                         <ChangeCircleOutlined sx={{ width: '88px', height: '88px' }} />
                     </Fab>
@@ -107,9 +135,9 @@ export default function SignIn({ changeState }) {
                 </InputBox>
                 <Button
                     variant="contained"
-                    onClick={() => {handleLogin()}}
-                    sx={{ width: '130px', height: '60px', marginTop: '15px', borderRadius: '25px', fontSize: '24px', backgroundColor: 'brown'}}
-                    endIcon={<CameraEnhanceOutlined/>}>
+                    onClick={() => { handleLogin() }}
+                    sx={{ width: '130px', height: '60px', marginTop: '15px', borderRadius: '25px', fontSize: '24px', backgroundColor: 'brown' }}
+                    endIcon={<CameraEnhanceOutlined />}>
                     로긴
                 </Button>
             </MainBox >

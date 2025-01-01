@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { TextField, Fab, Button } from '@mui/material';
 import { CameraEnhanceOutlined, ChangeCircleOutlined } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
+import { API } from "../../apis/routes";
 
 // 메인 구획
 const MainBox = styled.div`
@@ -81,6 +82,7 @@ export default function SignUP({ changeState }) {
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [password, setPassword] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState(false);
+    const [file, setFile] = useState(null);
 
     const navigate = useNavigate();
 
@@ -117,9 +119,46 @@ export default function SignUP({ changeState }) {
 
     // 회원가입 버튼 클릭시 처리
     const handleRegister = () => {
-        alert("이름: "+name+"\n"+"닉네임: "+nickname+"\n"+"이메일: " + email + "\n"+"비번: "+ password)
-        navigate("/auth/signIn");
+        register();
     }
+
+    async function register() {
+
+        const formData = new FormData();
+        const requestData = {
+            nickname: nickname,
+            email: email,
+            password: password
+        }
+        formData.append("request", JSON.stringify(requestData));
+        formData.append("file", file);
+        console.log(API.MEMBER)
+
+        try {
+            const response = await fetch(API.MEMBER, {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                body: formData
+            })
+
+            if (response.ok) {
+                console.log("업로드 성공")
+                navigate("/auth/signIn");
+            }
+            else {
+                console.log("업로드 실패")
+            }
+        }
+        catch (err){
+            console.log("회원가입 오류 발생", err)
+        }
+        
+    }
+
+    const handleFileUpload = (e) => {
+        setFile(e.target.files[0]);
+    };
 
     return (
         <>
@@ -145,7 +184,7 @@ export default function SignUP({ changeState }) {
                         >+
                             <VisuallyHiddenInput
                                 type="file"
-                                onChange={(event) => console.log(event.target.files)}
+                                onChange={(event) => handleFileUpload(event)}
                                 multiple
                             />
                         </Button>
