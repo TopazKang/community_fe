@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Camera, AccountCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { API } from '../../apis/routes';
 
 const MainDiv = styled.div`
     width: 1920px;
@@ -19,7 +20,26 @@ const Title = styled.a`
     font-weight: bold;
 `
 
+const Profile = styled.div`
+    width: 55px; 
+    height: 55px;
+    position: absolute; 
+    margin-left: 1400px;
+    margin-top: 10px;
+`
+
 export default function Header({ login }) {
+
+    const [url, setUrl] = useState('');
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+
+        if (token) {
+            getInfo(token)
+        }
+    }, [])
+
 
     const navigate = useNavigate();
 
@@ -27,12 +47,38 @@ export default function Header({ login }) {
         navigate('/');
     }
 
+    async function getInfo(token) {
+
+        try {
+            const response = await fetch(API.MEMBER, {
+                method: "GET",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+
+            if (response.ok) {
+                console.log("회원정보 조회 성공")
+                const data = await response.json();
+                setUrl(API.BASE_URL + data.profile_image_path);
+            }
+            else {
+                console.log("회원정보 조회 실패")
+            }
+        }
+        catch (err) {
+            console.log("회원정보 조회 오류 발생", err)
+        }
+    }
+
     return (
         <>
             <MainDiv>
-                <Camera sx={{ width: '45px', height: "45px", marginTop: "10px", marginRight: "15px"}} />
+                <Camera sx={{ width: '45px', height: "45px", marginTop: "10px", marginRight: "15px" }} />
                 <Title onClick={home}>셔터</Title>
-                {login && <AccountCircle onClick={()=> {alert('hel')}} sx={{ width: '55px', height: "55px", position: "absolute", marginLeft: '1400px', marginTop: '10px' }} />}
+                {url ? <Profile onClick={() => alert("profile")}><img src={url} width= '55px' height= "55px" /></Profile> : <Profile onClick={() => alert("profile")}><AccountCircle sx={{ width: '55px', height: "55px" }} /></Profile>}
             </MainDiv>
         </>
     )
