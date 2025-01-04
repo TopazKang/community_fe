@@ -87,6 +87,9 @@ export default function Vote() {
                 setIsSelected((prev) => prev.includes(id) ? prev.filter((prevId) => prevId !== id) : [...prev, id]);
                 console.log(selected)
             }
+            else if (selected.includes(id)){
+                setIsSelected((prev) => prev.filter((prevId) => prevId !== id));
+            }
             else {
                 alert("투표권이 부족합니다.");
             }
