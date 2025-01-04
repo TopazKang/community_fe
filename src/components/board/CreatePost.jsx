@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Clear } from '@mui/icons-material';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+import CustomEditor from '../utils/CustomEditor';
+import { API } from '../../apis/routes';
+import { useNavigate } from 'react-router-dom';
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -72,23 +75,26 @@ const TextBox = styled.div`
 `
 
 export default function CreatePost() {
+    const [title, setTitle] = useState('');
     const [tag, setTag] = useState('');
     const [tags, setTags] = useState([]);
     const [value, setValue] = useState('');
+    const [id, setId] = useState(0);
 
-    let nextId = 0;
+    const navigate = useNavigate();
 
     const addTags = () => {
         if (tag.length <= 4) {
             if (tags.length < 3) {
-                setTags([...tags, { id: nextId++, tag }]);
+                setTags([...tags, { id: id, tag }]);
                 setTag("");
+                setId(id + 1);
             }
             else {
                 alert("태그는 3개를 초과할 수 없습니다.")
             }
         }
-        else{
+        else {
             alert("태그는 4자를 초과할 수 없습니다.")
         }
 
@@ -101,28 +107,68 @@ export default function CreatePost() {
     }
 
     const deleteTag = (temp) => {
-        setTags(tags.filter((tag) => tag.tag !== temp));
+        setTags(tags.filter((tag) => tag.id !== temp));
     }
 
-    const handleQuillText = (value) => {
-        setValue(value);
+    const handleQuillText = (content) => {
+        setValue(content);
+    }
+
+    async function postData() {
+
+        const token = localStorage.getItem('accessToken');
+        const data = {
+            title: title,
+            content: value,
+            category: "standard",
+            tags: JSON.stringify(tags)
+        }
+
+        console.log(JSON.stringify(tags).length)
+
+        try {
+            const response = await fetch(API.POST, {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+                })
+
+            if (response.ok) {
+                console.log("게시글 작성 성공")
+                navigate('/board');
+            }
+            else {
+                console.log("게시글 작성 실패")
+                alert("게시글 작성 실패")
+            }
+        }
+        catch (err) {
+            console.log("게시글 작성 오류 발생", err)
+        }
     }
 
     return (
         <MainDiv>
             <ContentHeader>
-                <TitleInput></TitleInput>
+                <TitleInput onChange={(e) => setTitle(e.target.value)}></TitleInput>
                 <TagBox>
-                    <TagInput value={tag} onChange={e => {if(e.target.value.length <= 4) {setTag(e.target.value)}}} onKeyDown={(e) => activeEnter(e)} ></TagInput>
+                    <TagInput value={tag} onChange={e => { if (e.target.value.length <= 4) { setTag(e.target.value) } }} onKeyDown={(e) => activeEnter(e)} ></TagInput>
                     <TagList>
-                        {tags.map((tag) => <Tag key={tag.id}><a style={{ marginLeft: "10px" }}>{tag.tag}</a><Clear onClick={(e) => deleteTag(tag.tag)} sx={{ marginLeft: "70px", position: "absolute" }} /></Tag>)}
+                        {tags.map((tag) => <Tag key={tag.id}><a style={{ marginLeft: "10px" }}>{tag.tag}</a><Clear onClick={(e) => deleteTag(tag.id)} sx={{ marginLeft: "70px", position: "absolute" }} /></Tag>)}
                     </TagList>
                 </TagBox>
-                <Category></Category>
+                <Category onClick={postData}></Category>
             </ContentHeader>
-            <TextBox><ReactQuill style={{height: "560px"}} theme='snow' value={value} onChange={handleQuillText} /></TextBox>
+            <TextBox><CustomEditor method={handleQuillText} /></TextBox>
         </MainDiv>
     )
 }
 
 // 입력한거 로컬에 넣어두고 있으면 보여주고 아니면 빈칸으로 만드는 로직 추가할것.
+
+// https://all-done.tistory.com/143
