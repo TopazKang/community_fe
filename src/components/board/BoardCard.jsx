@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Favorite } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { API } from "../../apis/routes";
 
 const MainDiv = styled.div`
     width: 427px;
@@ -110,26 +111,39 @@ const CountBox = styled.div`
     align-items: center;
 `
 
-export default function BoardCard({id, title, content, tagList, profileImage, writer, count }) {
+export default function BoardCard({ id, title, content, tagList, writerImage, writer, count }) {
 
+    const [postTitle, setPostTitle] = useState();
     const navigate = useNavigate();
 
     const readPost = () => {
         navigate(`/standard-page/:${id}}`);
     }
-    
+
+    const tags = JSON.parse(tagList);
+    const profileUrl = API.BASE_URL + writerImage;
+
+    useEffect(() => {
+        if (title.length > 10) {
+            setPostTitle(title.slice(0, 10) + " ...");
+        } else {
+            setPostTitle(title);
+        }
+    }, [])
+
+
     return (
         <MainDiv onClick={readPost}>
             <Image></Image>
             <InfoBox>
-                <Title>{title}</Title>
+                <Title>{postTitle}</Title>
                 <Content>{content}</Content>
                 <TagBox>
-                    {tagList.map((tag) => (<Tag><TagText>#{tag.tag}</TagText></Tag>))}
+                    {tags.map((tag) => (<Tag><TagText>#{tag.tag}</TagText></Tag>))}
                 </TagBox>
                 <Footer>
                     <WriterBox>
-                        <ProfileImage></ProfileImage>
+                        <ProfileImage><img src={profileUrl} style={{ width: "32px", height: "32px", borderRadius: "50px" }} /></ProfileImage>
                         <Text>{writer}</Text>
                     </WriterBox>
                     <CountBox>

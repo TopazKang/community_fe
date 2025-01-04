@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import BoardCard from './BoardCard';
 import { useNavigate } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
+import { API } from '../../apis/routes';
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -79,10 +80,39 @@ const PageBox = styled.div`
 
 export default function Board() {
 
+    useEffect(() => {
+        getData();
+    },[])
+
     const navigate = useNavigate();
+    const [data, setData] = useState([]);
 
     const create = () => {
         navigate("/standard-page/create");
+    }
+
+    async function getData() {
+
+        try {
+            const response = await fetch(API.POST , {
+                method: "GET",
+                mode: "cors",
+                credentials: "include",
+            })
+
+            if (response.ok) {
+                console.log("게시판 조회 성공")
+                const datas = await response.json();
+                setData(datas);
+                console.log(datas)
+            }
+            else {
+                console.log("게시판 조회 실패")
+            }
+        }
+        catch (err) {
+            console.log("게시판 조회 오류 발생", err)
+        }
     }
 
     return (
@@ -93,15 +123,7 @@ export default function Board() {
                     <EditButton onClick={create}><Edit sx={{ width: '35px', height: '35px' }} /></EditButton>
                 </ButtonBox>
                 <CardBox>
-                    <BoardCard id="1" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }, {tag: "d"}]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="2" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="3" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="4" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="5" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="6" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="7" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="8" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
-                    <BoardCard id="9" title="제목이에요" content={"내용이에오 내용이라니까오"} tagList={[{ tag: "a" }, { tag: "b" }, { tag: "c" }]} profileImage={""} writer={"작성자"} count={"22"} />
+                    {data.map((post) => (<BoardCard key={`${post.postId}-${post.tags}`} id={post.postId} title={post.postTitle} content={post.postCreatedAt} tagList={post.tags} profileImage={post.userImage} writer={post.userNickname} writerImage={post.userImage} count={post.likesCount} />) )}
                 </CardBox>
                 <PageBox>
 
