@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { TextField, Fab, Button } from '@mui/material';
 import { CameraEnhanceOutlined, ChangeCircleOutlined } from '@mui/icons-material';
@@ -83,6 +83,7 @@ export default function SignUP({ changeState }) {
     const [password, setPassword] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [file, setFile] = useState(null);
+    const [preview, setPreview] = useState();
 
     const navigate = useNavigate();
 
@@ -126,6 +127,7 @@ export default function SignUP({ changeState }) {
 
         const formData = new FormData();
         const requestData = {
+            name: name,
             nickname: nickname,
             email: email,
             password: password
@@ -150,14 +152,17 @@ export default function SignUP({ changeState }) {
                 console.log("업로드 실패")
             }
         }
-        catch (err){
+        catch (err) {
             console.log("회원가입 오류 발생", err)
         }
-        
+
     }
 
     const handleFileUpload = (e) => {
         setFile(e.target.files[0]);
+        const img = e.target.files[0];
+        const url = URL.createObjectURL(img);
+        setPreview(url);
     };
 
     return (
@@ -175,19 +180,35 @@ export default function SignUP({ changeState }) {
                 </BoxHeader>
                 <InputBox>
                     <InputRow>
-                        <Button
-                            component="label"
-                            role={undefined}
-                            variant="contained"
-                            tabIndex={-1}
-                            sx={{ width: '215px', height: '215px', borderRadius: '50%', backgroudImage: "ddd" }}
-                        >+
-                            <VisuallyHiddenInput
-                                type="file"
-                                onChange={(event) => handleFileUpload(event)}
-                                multiple
-                            />
-                        </Button>
+                        {file ?
+                            <Button
+                                component="label"
+                                role={undefined}
+                                variant="contained"
+                                tabIndex={-1}
+                                sx={{ width: '215px', height: '215px', borderRadius: '50%' }}>
+                                <img src={preview} style={{ width: '215px', height: '215px', borderRadius: '50%' }} />
+                                <VisuallyHiddenInput
+                                    type="file"
+                                    onChange={(event) => handleFileUpload(event)}
+                                    multiple
+                                />
+                            </Button>
+                            :
+                            <Button
+                                component="label"
+                                role={undefined}
+                                variant="contained"
+                                tabIndex={-1}
+                                sx={{ width: '215px', height: '215px', borderRadius: '50%' }}>
+                                +
+                                <VisuallyHiddenInput
+                                    type="file"
+                                    onChange={(event) => handleFileUpload(event)}
+                                    multiple
+                                />
+                            </Button>
+                        }
                         <InputColumn>
                             <TextField
                                 sx={{ width: '250px', marginBottom: '50px' }}
