@@ -9,6 +9,7 @@ export const API = {
     EMAIL: `${API_URL}/members/email`,
 
     POST: `${API_URL}/posts/`,
+    IMAGE: `${API_URL}/posts/image`,
 
     COMMENT: `${API_URL}/comments`
 }
