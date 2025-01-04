@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Ring from './Ring';
 import { Button } from '@mui/material';
 import { Home, PhotoLibrary, HowToVote, Replay } from '@mui/icons-material'
+import GetTime from '../../utils/GetTime';
 
 const MainDiv = styled.div`
         width: 1560px;
@@ -71,9 +72,24 @@ const HalfLine = styled.hr`
     background-color: gray;
     position: absolute;
     margin-top: 93px;
-`
+`;
 
 export default function Main({ home, board, vote, content, children, title }) {
+
+    const [year, setYear] = useState();
+    const [month, setMonth] = useState();
+    const [day, setDay] = useState();
+
+
+
+    useEffect(() => {
+        const today = GetTime();
+        setYear(String(today.getFullYear()).slice(-2));
+        setMonth(("0" + (today.getMonth() + 1)).slice(-2));
+        setDay(("0" + today.getDate()).slice(-2));
+    }, [])
+
+
     return (
         <>
             <MainDiv>
@@ -87,7 +103,7 @@ export default function Main({ home, board, vote, content, children, title }) {
                 <Div>
                     <TitleBox>
                         <Title>{title}</Title>
-                        <Date>24.11.01</Date>
+                        <Date>{`${year}.${month}.${day}`}</Date>
                         <HalfLine />
                     </TitleBox>
                     {children}
