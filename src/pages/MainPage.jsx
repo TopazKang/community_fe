@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Main from '../components/main/Main';
 import Header from '../components/main/Header';
 import Home from '../components/home/Home';
 import Board from '../components/board/Board';
 import Vote from '../components/vote/Vote';
+import { useParams } from 'react-router-dom';
 
 const MainDiv = styled.div`
         height: 1080px;
@@ -19,6 +20,19 @@ export default function MainPage() {
     const [board, setBoard] = useState(false);
     const [vote, setVote] = useState(false);
     const [title, setTitle] = useState("메인");
+    const param = useParams();
+
+    useEffect(() => {
+            if (param.state === "main") {
+                handleHome();
+            }
+            if (param.state === "board") {
+                handleBoard();
+            }
+            if (param.state === "vote") {
+                handleVote();
+            }
+        },[param.state])
 
     const handleHome = () => {
         setHome(true);
@@ -38,6 +52,8 @@ export default function MainPage() {
         setVote(true);
         setTitle("투표");
     }
+
+
 
     return(
         <>
