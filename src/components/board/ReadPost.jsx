@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Clear } from '@mui/icons-material';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { useParams } from 'react-router-dom';
+import { API } from '../../apis/routes';
+import DOMPurify from 'dompurify';
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -10,6 +10,7 @@ const MainDiv = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: auto;
 `
 const PostBox = styled.div`
     width: 666px;
@@ -138,21 +139,53 @@ const CommentWriterText = styled.div`
 
 export default function ReadPost() {
 
+    const [data, setData] = useState({});
+    const { post_id } = useParams();
+
+    const id = post_id.split('')[1];
+
+    useEffect(() => {
+        getData();
+    },[])
+
+    async function getData() {
+            try {
+                const response = await fetch(API.POST+id , {
+                    method: "GET",
+                    mode: "cors",
+                    credentials: "include",
+                })
+    
+                if (response.ok) {
+                    console.log("게시글 조회 성공")
+                    const datas = await response.json();
+                    setData(datas);
+                    console.log(datas.postContent)
+                }
+                else {
+                    console.log("게시글 조회 실패")
+                }
+            }
+            catch (err) {
+                console.log("게시글 조회 오류 발생", err)
+            }
+        }
+
     return (
         <MainDiv>
             <PostBox>
                 <TitleBox>
-                    <h2>일이삼다오asdfasdfa</h2>
+                    <h2>{data.postTitle}</h2>
                     <TitleInfoBox>
                         <ImageBox />
                         <TitleInfo>
-                            <Writer>작성자</Writer>
-                            <Date>2024/11/08 22:08:22</Date>
+                            <Writer>{data.userNickname}</Writer>
+                            <Date>{data.postCreatedAt}</Date>
                         </TitleInfo>
                     </TitleInfoBox>
                 </TitleBox>
                 <Line />
-                <Content>asdfasdfasdfasdfasdfasd</Content>
+                <Content dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(data.postContent)}} />
                 <Line />
             </PostBox>
             <CommentBox>
