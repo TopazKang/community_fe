@@ -78,7 +78,7 @@ export default function Header({ login }) {
             <MainDiv>
                 <Camera sx={{ width: '45px', height: "45px", marginTop: "10px", marginRight: "15px" }} />
                 <Title onClick={home}>셔터</Title>
-                {url ? <Profile onClick={() => alert("profile")}><img src={url} width= '55px' height= "55px" /></Profile> : <Profile onClick={() => alert("profile")}><AccountCircle sx={{ width: '55px', height: "55px" }} /></Profile>}
+                {url ? <Profile onClick={() => navigate("/auth/signIn")}><img src={url} width= '55px' height= "55px" /></Profile> : <Profile onClick={() => navigate("/auth/signIn")}><AccountCircle sx={{ width: '55px', height: "55px" }} /></Profile>}
             </MainDiv>
         </>
     )
