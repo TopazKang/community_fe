@@ -14,7 +14,9 @@ export default function Router() {
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/*" element={"404 not found"} />
-                <Route path="/auth/:state" element={<SignPage />}/>
+                <Route path="/:state" element={<MainPage />} />
+                <Route path="/auth" element={<SignPage />} />
+                <Route path="/auth/:state" element={<SignPage />} />
                 <Route path="/standard-page/create" element={<CreatePostPage />} />
                 <Route path="/standard-page/:post_id" element={<ReadPostPage />} />
                 <Route path="/standard-page/edit/:post_id" element={<CreatePostPage />} />
@@ -38,3 +40,5 @@ export default function Router() {
 
 https://whitewise95.tistory.com/312
 */
+
+// /:state가 /*를 잡아먹음
