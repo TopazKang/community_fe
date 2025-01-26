@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Close } from '@mui/icons-material';
+import { Close, Style } from '@mui/icons-material';
 import ModalReply from './ModalReply';
+import { API } from '../../apis/routes';
+import { TextField, Button } from '@mui/material';
 
 const Div = styled.div`
     width: 100%;
@@ -13,6 +15,7 @@ const Div = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 `
 const MainDiv = styled.div`
     width: 1000px;
@@ -50,13 +53,21 @@ const Cancel = styled.div`
 `
 const ReplysBox = styled.div`
     width: 320px;
-    height: 200px;
+    height: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
     row-gap: 15px;
     overflow-y: auto;
+`
+const ReplyInputBox = styled.div`
+    width: 320px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `
 const InfoBox = styled.div`
     width: 307px;
@@ -103,38 +114,113 @@ const InfoNum = styled.div`
 
 export default function ContentModal({ closeModal, id }) {
 
-    console.log(id)
+    const [data, setData] = useState();
+    const [comments, setComments] = useState([]);
+    const [state, setState] = useState(true);
+    const valueRef = useRef("");
+
+    useEffect(() => {
+        getData();
+    }, [id, state])
+
+    async function getData() {
+        try {
+            const response = await fetch(API.VOTE + id, {
+                method: "GET",
+                mode: "cors",
+                credentials: "include",
+            })
+
+            if (response.ok) {
+                console.log("게시글 조회 성공")
+                const datas = await response.json();
+                console.log(datas)
+                setData(datas);
+                setComments(datas.comments);
+            }
+            else {
+                console.log("게시글 조회 실패")
+            }
+        }
+        catch (err) {
+            console.log("게시글 조회 오류 발생", err)
+        }
+    }
+
+    const handleComment = () => {
+        postComment();
+    }
+
+    async function postComment() {
+        const token = localStorage.getItem("accessToken");
+
+        try {
+            const response = await fetch(API.VOTE_COMMENT + id, {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: valueRef.current.value
+            })
+
+            if (response.ok) {
+                console.log("댓글 작성 성공")
+                setState(!state);
+                valueRef.current.value = "";
+            }
+            else {
+                console.log("댓글 작성 실패")
+            }
+        }
+        catch (err) {
+            console.log("댓글 작성 오류 발생", err)
+        }
+    }
 
     return (
         <Div>
-            <MainDiv>
-                <LeftSection></LeftSection>
-                <RightSection>
-                    <Cancel onClick={closeModal}>
-                        <Close sx={{ width: '30px', height: '30px' }} />
-                    </Cancel>
-                    <ReplysBox>
-                        <ModalReply replyText="사진이 너무 예뻐요" replyDate="24.12.12 22:35:33" replyWriter="작성자" />
-                        <ModalReply replyText="사진이 너무 예뻐요" replyDate="24.12.12 22:35:33" replyWriter="작성자" />
-                        <ModalReply replyText="사진이 너무 예뻐요" replyDate="24.12.12 22:35:33" replyWriter="작성자" />
-                        <ModalReply replyText="사진이 너무 예뻐요" replyDate="24.12.12 22:35:33" replyWriter="작성자" />
-                    </ReplysBox>
-                    <InfoBox>
-                        <InfoFirst>
-                            <InfoTitle>타이틀</InfoTitle>
-                            <InfoDate>24.12.12 22:35:33</InfoDate>
-                        </InfoFirst>
-                        <InfoContent>이건 내용이야야 {id}</InfoContent>
-                        <InfoNums>
-                            <InfoNum>f/1.8</InfoNum>
-                            <InfoNum>1/4000초</InfoNum>
-                            <InfoNum>iso 100</InfoNum>
-                            <InfoNum>6200k</InfoNum>
-                        </InfoNums>
-                    </InfoBox>
-                </RightSection>
-            </MainDiv>
-        </Div>
+            {data ?
+                <MainDiv>
+                    <LeftSection><img src={API.BASE_URL + data.postImagePath} style={{ width: "650px", height: "625px" }} /></LeftSection>
+                    <RightSection>
+                        <Cancel onClick={closeModal}>
+                            <Close sx={{ width: '30px', height: '30px' }} />
+                        </Cancel>
+                        <ReplysBox>
+                            {comments.map((comment) => <ModalReply replyText={comment.comment} replyDate={comment.createdAt} replyWriter={comment.userNickname} replyImage={API.BASE_URL+comment.userProfileImagePath} />)}
+                        </ReplysBox>
+                        <ReplyInputBox>
+                            <TextField
+                                inputRef={valueRef}
+                                label="댓글"
+                                multiline
+                                rows={2}
+                                sx={{ width: "230px" }}
+                            />
+                            <Button variant='contained' onClick={handleComment} sx={{width: "80px", height: "79px"}} >작성</Button>
+                        </ReplyInputBox>
 
+                        <InfoBox>
+                            <InfoFirst>
+                                <InfoTitle>{data.postTitle}</InfoTitle>
+                                <InfoDate>{data.createdAt}</InfoDate>
+                            </InfoFirst>
+                            <InfoContent>{data.postContent}</InfoContent>
+                            <InfoNums>
+                                <InfoNum>조리개: {data.aperture}</InfoNum>
+                                <InfoNum>셔터 스피드: {data.shutter}</InfoNum>
+                                <InfoNum>감도: {data.iso}</InfoNum>
+                                <InfoNum>W/B: {data.whitebalance}</InfoNum>
+                            </InfoNums>
+                        </InfoBox>
+                    </RightSection>
+                </MainDiv>
+                :
+                <></>
+            }
+        </Div>
     )
 }

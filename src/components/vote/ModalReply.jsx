@@ -48,14 +48,14 @@ const ReplyWriter = styled.div`
     margin-left: 5px;
 `
 
-export default function ModalReply({replyText, replyDate, replyWriter}) {
+export default function ModalReply({replyText, replyDate, replyWriter, replyImage}) {
     return (
         <Reply>
             <ReplyText>{replyText}</ReplyText>
             <ReplyInfo>
                 <ReplyDate>{replyDate}</ReplyDate>
                 <ReplyWriterBox>
-                    <ReplyWriterImage></ReplyWriterImage>
+                    <ReplyWriterImage style={{backgroundImage: `url(${replyImage})`, backgroundSize: "cover"}} />
                     <ReplyWriter>{replyWriter}</ReplyWriter>
                 </ReplyWriterBox>
             </ReplyInfo>

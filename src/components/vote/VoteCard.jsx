@@ -36,6 +36,7 @@ const SubDiv = styled.div`
     flex-direction: column;
     justify-content: flex-end;
     align-items: end;
+    position: relative;
 `
 const IconBox = styled.div`
     width: 55px;
@@ -46,11 +47,11 @@ const IconBox = styled.div`
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
-    margin-right: 40px;
+    margin-right: 22px;
 `
 
 
-export default function VoteCard({ readPost, postImage, vote, select, id }) {
+export default function VoteCard({ readPost, postImagePath, vote, select, id, likesCount }) {
 
     const [isVoting, setIsVoting] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
@@ -76,7 +77,7 @@ export default function VoteCard({ readPost, postImage, vote, select, id }) {
         <MainDiv onClick={readPost}>
             {isVoting && <Voting><CheckBoxOutlineBlank sx={{ width: '150px', height: '150px', color: 'white' }} /></Voting>}
             {isSelecting && <Voting><CheckBox sx={{ width: '150px', height: '150px', color: 'white' }} /></Voting>}
-            <SubDiv><IconBox><Favorite sx={{ width: '40px', height: '40px' }} />22</IconBox></SubDiv>
+            <SubDiv style={{backgroundImage: `url(${postImagePath})`, backgroundSize: "cover"}}><IconBox><Favorite sx={{ width: '40px', height: '40px' }} />{likesCount}</IconBox></SubDiv>
         </MainDiv>
     )
 }

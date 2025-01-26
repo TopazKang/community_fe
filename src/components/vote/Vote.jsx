@@ -4,6 +4,7 @@ import { Edit, HowToVote } from "@mui/icons-material";
 import VoteCard from './VoteCard';
 import ContentModal from './ContentModal';
 import { useNavigate } from 'react-router-dom';
+import { API } from '../../apis/routes';
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -75,11 +76,17 @@ export default function Vote() {
     const [selected, setIsSelected] = useState([]);
     const [count, setCount] = useState(0);
 
+    const [data, setData] = useState([]);
+    const [page, setPage] = useState(0);
+    const [postCount, setPostCount] = useState(0);
+    const [isActive, setIsActive] = useState(false);
+
     const navigate = useNavigate();
 
+    // 투표 관련 로직
     useEffect(() => {
         setCount(5);
-    },[])
+    }, [])
 
     const handleCard = (id) => {
         if (isVoting) {
@@ -87,7 +94,7 @@ export default function Vote() {
                 setIsSelected((prev) => prev.includes(id) ? prev.filter((prevId) => prevId !== id) : [...prev, id]);
                 console.log(selected)
             }
-            else if (selected.includes(id)){
+            else if (selected.includes(id)) {
                 setIsSelected((prev) => prev.filter((prevId) => prevId !== id));
             }
             else {
@@ -110,31 +117,90 @@ export default function Vote() {
     }
 
     useEffect(() => {
-        if(!isVoting){
+        if (!isVoting) {
             setIsSelected([]);
         }
-    },[isVoting])
+    }, [isVoting])
 
     const create = () => {
         navigate("/vote-page/create");
     }
 
+    // 게시글 조회 로직
+    useEffect(() => {
+        if (isActive) {
+            getData();
+        }
+    }, [isActive])
+
+    // 무한 스크롤 필요 로직
+    const handleObserver = (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting) {
+            console.log(target.isIntersecting)
+            setIsActive(true);
+        }
+        else {
+            setIsActive(false);
+        }
+    };
+
+    useEffect(() => {
+        const observer = new IntersectionObserver((handleObserver), {
+            threshold: 0.25,
+        });
+
+        const observerTarget = document.getElementById("observer");
+
+        if (observerTarget) {
+            observer.observe(observerTarget);
+        }
+
+        return () => {
+            if (observerTarget) {
+                observer.unobserve(observerTarget);
+            }
+        };
+
+        
+    }, []);
+
+    async function getData() {
+
+        try {
+            const response = await fetch(`${API.VOTE}paged?page=${page}&size=9&sort=createdAt,DESC`, {
+                method: "GET",
+                mode: "cors",
+                credentials: "include"
+            })
+
+            if (response.ok) {
+                console.log("게시판 조회 성공")
+                const datas = await response.json();
+                setPostCount(datas.count + " " + page);
+                setData((prevData) => [...prevData, ...datas.posts]);
+                setPage(page+1);
+                console.log(datas)
+            }
+            else {
+                console.log("게시판 조회 실패")
+            }
+        }
+        catch (err) {
+            console.log("게시판 조회 오류 발생", err)
+        }
+    }
 
     return (
         <MainDiv>
             <BodyBox>
                 <ButtonBox>
                     <CreateButton onClick={create}><Edit sx={{ width: '35px', height: '35px' }} /></CreateButton>
-                    <VoteButton onClick={toggleVoteMode}><HowToVote sx={{ width: '35px', height: '35px' }} />{isVoting && count-selected.length}</VoteButton>
+                    <VoteButton onClick={toggleVoteMode}><HowToVote sx={{ width: '35px', height: '35px' }} />{isVoting && count - selected.length}</VoteButton>
                 </ButtonBox>
                 <CardBox>
-                    <VoteCard readPost={() => handleCard(1)} vote={isVoting} select={selected} id={1}></VoteCard>
-                    <VoteCard readPost={() => handleCard(2)} vote={isVoting} select={selected} id={2}></VoteCard>
-                    <VoteCard readPost={() => handleCard(3)} vote={isVoting} select={selected} id={3}></VoteCard>
-                    <VoteCard readPost={() => handleCard(4)} vote={isVoting} select={selected} id={4}></VoteCard>
-                    <VoteCard readPost={() => handleCard(5)} vote={isVoting} select={selected} id={5}></VoteCard>
-                    <VoteCard readPost={() => handleCard(6)} vote={isVoting} select={selected} id={6}></VoteCard>
-                    <VoteCard readPost={() => handleCard(7)} vote={isVoting} select={selected} id={7}></VoteCard>
+                    {data.map((post) => (<VoteCard key={`${post.posdId}-${post.postImagePath}`} id={post.postId} postImagePath={API.BASE_URL + post.postImagePath} likesCount={post.likesCount} readPost={() => handleCard(post.postId)} vote={isVoting} select={selected} />))}
+                    <div id="observer" style={{ width:"1131px", height: "100px"}} />
                 </CardBox>
                 {modalOpen && <ContentModal closeModal={closeModal} id={id} />}
             </BodyBox>

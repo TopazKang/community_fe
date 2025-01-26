@@ -11,5 +11,8 @@ export const API = {
     POST: `${API_URL}/posts/`,
     IMAGE: `${API_URL}/posts/image`,
 
-    COMMENT: `${API_URL}/comments`
+    COMMENT: `${API_URL}/comments/`,
+
+    VOTE: `${API_URL}/vote-posts/`,
+    VOTE_COMMENT: `${API_URL}/vote-comments/`
 }
