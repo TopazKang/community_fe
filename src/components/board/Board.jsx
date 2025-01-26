@@ -4,6 +4,8 @@ import BoardCard from './BoardCard';
 import { useNavigate } from 'react-router-dom';
 import { Edit } from '@mui/icons-material';
 import { API } from '../../apis/routes';
+import Pagination from 'react-js-pagination';
+import "../css/pagination.css"
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -70,22 +72,23 @@ const PageBox = styled.div`
     width: 200px;
     height: 41px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-
-    border: solid 1px;
+    justify-content: center;
 `
+
 
 
 export default function Board() {
 
-    useEffect(() => {
-        getData();
-    },[])
-
     const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const [page, setPage] = useState(0);
+    const [count, setCount] = useState();
+
+    useEffect(() => {
+        getData();
+    }, [page])
 
     const create = () => {
         navigate("/standard-page/create");
@@ -93,17 +96,19 @@ export default function Board() {
 
     async function getData() {
 
+
         try {
-            const response = await fetch(API.POST , {
+            const response = await fetch(`${API.POST}paged?page=${page-1}&size=9&sort=createdAt,DESC`, {
                 method: "GET",
                 mode: "cors",
-                credentials: "include",
+                credentials: "include"
             })
 
             if (response.ok) {
                 console.log("게시판 조회 성공")
                 const datas = await response.json();
-                setData(datas);
+                setCount(datas.count);
+                setData(datas.posts);
                 console.log(datas)
             }
             else {
@@ -115,18 +120,30 @@ export default function Board() {
         }
     }
 
+    const pagingHandler = (p) => {
+        setPage(p);
+    }
+
     return (
         <MainDiv>
             <BodyBox>
                 <ButtonBox>
-                    <Dropdown>카테고리</Dropdown>
+                    {/*<Dropdown>카테고리</Dropdown> */}
                     <EditButton onClick={create}><Edit sx={{ width: '35px', height: '35px' }} /></EditButton>
                 </ButtonBox>
                 <CardBox>
-                    {data.map((post) => (<BoardCard key={`${post.postId}-${post.tags}`} id={post.postId} title={post.postTitle} content={post.postCreatedAt} tagList={post.tags} profileImage={post.userImage} writer={post.userNickname} writerImage={post.userImage} count={post.likesCount} />) )}
+                    {data.map((post) => (<BoardCard key={`${post.postId}-${post.tags}`} id={post.postId} title={post.postTitle} content={post.postCreatedAt} tagList={post.tags} profileImage={post.userImage} writer={post.userNickname} writerImage={post.userImage} count={post.likesCount} />))}
                 </CardBox>
                 <PageBox>
-
+                    <Pagination
+                        activePage={page} // 현재 페이지
+                        itemCountPerPage={9} // 페이지당 개수
+                        totalItemsCount={count} // 총 아이템 개수
+                        pageRangeDisplayed={5}
+                        prevPageText={"<"}
+                        nextPageText={">"}
+                        onChange={pagingHandler} // 페이지 전환 핸들러
+                    />
                 </PageBox>
             </BodyBox>
         </MainDiv>
