@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { API } from '../../apis/routes';
 import DOMPurify from 'dompurify';
+import Comment from './Comment';
+import { Edit, Close } from '@mui/icons-material';
+import CreatePost from './CreatePost';
+import { useNavigate } from 'react-router-dom';
 
 const MainDiv = styled.div`
     width: 1313px;
@@ -62,10 +66,11 @@ const Content = styled.div`
 `
 const CommentBox = styled.div`
     width: 612px;
+    margin-bottom: 30px;
 `
 const CommentInputBox = styled.div`
     width: 612px;
-    height: 110px;
+    height: 120px;
     background-color: gray;
     display: flex;
     flex-direction: column;
@@ -75,136 +80,218 @@ const CommentInputBox = styled.div`
     border-radius: 10px;
 `
 const CommentInput = styled.input`
-    width: 602px;
+    width: 598px;
     height: 70px;
-    margin-top: 2px;
-    margin-left: 2px;
+    margin: 4px;
     border-radius: 10px;
 `
 const CommentButton = styled.div`
     width: 114px;
     height: 31px;
     background-color: lightblue;
-    margin-left: 492px;
+    margin-left: 488px;
     border-radius: 10px;
-`
-const Comment = styled.div`
-    width: 612px;
-    height: 119px;
-    display: flex;
-    flex-direction: column;
+    display:flex;
     align-items: center;
-    background-color: gray;
-    border-radius: 10px;
+    justify-content: center;
 `
-const CommentText = styled.div`
-    width: 534px;
-    height: 32px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-`
-const CommentInfo = styled.div`
-    width: 534px;
-    height: 27px;
+const HeaderBox = styled.div`
     display: flex;
     flex-direction: row;
-    align-items: center;
+    width: 666px;
     justify-content: space-between;
-`
-const CommentDate = styled.div`
-    width: 134px;
-    color: lightgray;
-    font-size: 16px;
-`
-const CommentWriter = styled.div`
-    width: 80px;
-    height: 27px;
-    display: flex;
-    flex-direction: row;
     align-items: center;
 `
-const CommentWriterImage = styled.div`
-    width: 27px;
-    height: 27px;
-    border-radius: 50px;
-    background-color: lightgray;
+const Cancel = styled.div`
 `
-const CommentWriterText = styled.div`
-    font-size: 16px;
-    margin-left: 4px;
+const RowBox = styled.div`
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 `
-
 
 
 
 export default function ReadPost() {
 
+    // 초기 데이터 로딩을 위한 상태
     const [data, setData] = useState({});
+    const [comments, setComments] = useState([]);
     const { post_id } = useParams();
+    const [isOwner, setIsOwner] = useState(false);
 
+    // 댓글 작성 및 리로드를 위한 상태
+    const [state, setState] = useState(true);
+    const valueRef = useRef("");
+
+    // 파라미터 postid 추출
     const id = post_id.split('')[1];
+
+    // 게시글 수정을 위한 상태
+    const [modify, setModify] = useState(false);
+
+    // 네비게이션(페이지 이동)
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         getData();
-    },[])
+    }, [id, state])
 
+    // 초기 데이터 로딩 fetch
     async function getData() {
-            try {
-                const response = await fetch(API.POST+id , {
-                    method: "GET",
-                    mode: "cors",
-                    credentials: "include",
-                })
-    
-                if (response.ok) {
-                    console.log("게시글 조회 성공")
-                    const datas = await response.json();
-                    setData(datas);
-                    console.log(datas.postContent)
-                }
-                else {
-                    console.log("게시글 조회 실패")
-                }
-            }
-            catch (err) {
-                console.log("게시글 조회 오류 발생", err)
+
+        const token = localStorage.getItem("accessToken");
+        let header = {}
+        if(token){
+            header = {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
         }
 
+        try {
+            const response = await fetch(API.POST + id, {
+                method: "GET",
+                mode: "cors",
+                credentials: "include",
+                headers: header,
+            })
+
+            if (response.ok) {
+                console.log("게시글 조회 성공")
+                const datas = await response.json();
+                setData(datas);
+                setComments(datas.comments);
+            }
+            else {
+                console.log("게시글 조회 실패")
+            }
+        }
+        catch (err) {
+            console.log("게시글 조회 오류 발생", err)
+        }
+    }
+
+    const submitComment = () => {
+        postComment();
+    }
+
+    // 댓글 작성 fetch
+    async function postComment() {
+
+        const token = localStorage.getItem("accessToken");
+
+        try {
+            const response = await fetch(API.COMMENT + id, {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: valueRef.current.value
+            })
+
+            if (response.ok) {
+                console.log("댓글 작성 성공")
+                reload();
+                valueRef.current.value = "";
+            }
+            else {
+                console.log("댓글 작성 실패")
+            }
+        }
+        catch (err) {
+            console.log("댓글 작성 오류 발생", err)
+        }
+    }
+
+    // 데이터 리로드
+    const reload = () => {
+        setState(!state);
+    }
+
+    // 게시물 수정
+    const handleModify = () => {
+        setModify(!modify);
+    }
+
+    // 게시글 삭제 fetch
+    async function deletePost() {
+        const token = localStorage.getItem('accessToken');
+
+        try {
+            const response = await fetch(API.POST + id, {
+                method: "DELETE",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+
+            if (response.ok) {
+                console.log("게시글글 삭제 성공")
+                navigate("/");
+            }
+            else {
+                console.log("게시글 삭제 실패")
+                alert("게시글 삭제 실패")
+            }
+        }
+        catch (err) {
+            console.log("게시글 삭제 오류 발생", err)
+        }
+    }
+
     return (
-        <MainDiv>
-            <PostBox>
-                <TitleBox>
-                    <h2>{data.postTitle}</h2>
-                    <TitleInfoBox>
-                        <ImageBox />
-                        <TitleInfo>
-                            <Writer>{data.userNickname}</Writer>
-                            <Date>{data.postCreatedAt}</Date>
-                        </TitleInfo>
-                    </TitleInfoBox>
-                </TitleBox>
-                <Line />
-                <Content dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(data.postContent)}} />
-                <Line />
-            </PostBox>
-            <CommentBox>
-                <CommentInputBox>
-                    <CommentInput />
-                    <CommentButton/>
-                </CommentInputBox>
-                <Comment>
-                    <CommentText>asdfasdfasdf</CommentText>
-                    <CommentInfo>
-                        <CommentDate>24.11.08 12:10:22</CommentDate>
-                        <CommentWriter>
-                            <CommentWriterImage />
-                            <CommentWriterText>작성자</CommentWriterText>
-                        </CommentWriter>
-                    </CommentInfo>
-                </Comment>
-            </CommentBox>
-        </MainDiv>
+        <>
+            {modify ?
+                <CreatePost origin={data} method={handleModify} reload={reload} />
+                :
+                <MainDiv>
+                    <PostBox>
+                        <TitleBox>
+                            <HeaderBox>
+                                <h2>{data.postTitle}</h2>
+                                {data.isOwner &&
+                                    <RowBox>
+                                        <Cancel onClick={handleModify}>
+                                            <Edit sx={{ width: '30px', height: '30px', marginTop: "20px" }} />
+                                        </Cancel>
+                                        <Cancel onClick={deletePost}>
+                                            <Close sx={{ width: '30px', height: '30px', marginTop: "20px" }} />
+                                        </Cancel>
+                                    </RowBox>
+                                }
+                            </HeaderBox>
+                            <TitleInfoBox>
+                                <ImageBox style={{ backgroundImage: `url(${API.BASE_URL + data.userImage})`, backgroundSize: 'cover' }} />
+                                <TitleInfo>
+                                    <Writer>{data.userNickname}</Writer>
+                                    <Date>{data.postCreatedAt}</Date>
+                                </TitleInfo>
+                            </TitleInfoBox>
+                        </TitleBox>
+                        <Line />
+                        <Content dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.postContent) }} />
+                        <Line />
+                    </PostBox>
+                    <CommentBox>
+                        <CommentInputBox>
+                            <CommentInput ref={valueRef} />
+                            <CommentButton onClick={submitComment}>댓글 작성</CommentButton>
+                        </CommentInputBox>
+                        {comments.map((comment) => (<Comment key={`${comment.commentId}-${comment.commentCreatedAt}`} id={comment.commentId} isOwner={comment.isOwner} comment={comment.comment} date={comment.commentCreatedAt} profileImagePath={comment.userImage} nickname={comment.userNickname} reload={reload} />))}
+                    </CommentBox>
+                </MainDiv>
+            }
+        </>
+
     )
 }
 
