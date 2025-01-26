@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactQuill from "react-quill-new";  // import는 "react-quill-new" 사용
 import 'react-quill-new/dist/quill.snow.css';
 import { API } from "../../apis/routes";
@@ -46,9 +46,13 @@ const imageHandler = async (quillRef) => {
   };
 };
 
-const CustomEditor = ({method}) => {
+const CustomEditor = ({value, method}) => {
   const [editorContent, setEditorContent] = useState("");
   const quillRef = useRef(null);
+
+  useEffect(() => {
+    setEditorContent(value);
+  },[value])
 
   // modules 설정 (useMemo 방식 사용)
   const modules = useMemo(() => {
