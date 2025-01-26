@@ -16,10 +16,10 @@ const MainDiv = styled.div`
 `
 
 export default function MainPage() {
-    const [home, setHome] = useState(true);
-    const [board, setBoard] = useState(false);
+    const [home, setHome] = useState(false);
+    const [board, setBoard] = useState(true);
     const [vote, setVote] = useState(false);
-    const [title, setTitle] = useState("메인");
+    const [title, setTitle] = useState("게시판");
     const param = useParams();
 
     useEffect(() => {

@@ -35,7 +35,6 @@ const ButtonDiv = styled.div`
     height: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     position: absolute;
     margin-left: 1560px;
@@ -109,12 +108,12 @@ export default function Main({ home, board, vote, content, children, title }) {
                     {children}
                 </Div>
                 <ButtonDiv>
-                    <Button
+                    {/*<Button
                         onClick={home}
                         sx={{ width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0' }}>
                         <Home
                             sx={{ width: '80px', height: '80px' }} />
-                    </Button>
+                    </Button>*/}
                     <Button
                         onClick={board}
                         sx={{ width: '96px', height: '96px', backgroundColor: 'gray', marginBottom: "4px", borderRadius: '0 15px 15px 0' }}>
