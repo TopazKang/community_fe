@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import SignIn from '../components/member/SignIn';
 import SignUp from '../components/member/SignUp';
 import { useParams } from 'react-router-dom';
+import Header from '../components/main/Header';
 
 const MainDiv = styled.div`
-        height: 1080px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -15,11 +15,13 @@ const MainDiv = styled.div`
 export default function SignPage() {
 
     const [signState, setSignState] = useState(true);
+    const [modifyState, setModifyState] = useState(false);
     const param = useParams();
 
     const handleState = () => {
         setSignState(!signState);
     }
+
 
     useEffect(() => {
         if (param.state === "signUp") {
@@ -28,13 +30,18 @@ export default function SignPage() {
         if (param.state === "signIn") {
             setSignState(true);
         }
-    },[param.state])
+        if (param.state === "modifyInfo") {
+            setSignState(false);
+            setModifyState(true);
+        }
+    }, [param.state])
 
 
     return (
         <>
-            <MainDiv>
-                {signState ? <SignIn changeState={handleState} /> : <SignUp changeState={handleState} />}
+            <MainDiv style={{height: modifyState ? "":"1080px"}}>
+                {modifyState && <Header/>}
+                {signState ? <SignIn changeState={handleState} /> : <SignUp changeState={handleState} modifyState={modifyState} />}
             </MainDiv>
         </>
     )
