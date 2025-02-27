@@ -125,9 +125,6 @@ export default function ReadPost() {
     const [state, setState] = useState(true);
     const valueRef = useRef("");
 
-    // 파라미터 postid 추출
-    const id = post_id.split('')[1];
-
     // 게시글 수정을 위한 상태
     const [modify, setModify] = useState(false);
 
@@ -137,7 +134,7 @@ export default function ReadPost() {
 
     useEffect(() => {
         getData();
-    }, [id, state])
+    }, [post_id, state])
 
     // 초기 데이터 로딩 fetch
     async function getData() {
@@ -152,7 +149,7 @@ export default function ReadPost() {
         }
 
         try {
-            const response = await fetch(API.POST + id, {
+            const response = await fetch(API.POST + post_id, {
                 method: "GET",
                 mode: "cors",
                 credentials: "include",
@@ -184,7 +181,7 @@ export default function ReadPost() {
         const token = localStorage.getItem("accessToken");
 
         try {
-            const response = await fetch(API.COMMENT + id, {
+            const response = await fetch(API.COMMENT + post_id, {
                 method: "POST",
                 mode: "cors",
                 credentials: "include",
@@ -224,7 +221,7 @@ export default function ReadPost() {
         const token = localStorage.getItem('accessToken');
 
         try {
-            const response = await fetch(API.POST + id, {
+            const response = await fetch(API.POST + post_id, {
                 method: "DELETE",
                 mode: "cors",
                 credentials: "include",
