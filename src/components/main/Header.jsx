@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Camera, AccountCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { API } from '../../apis/routes';
+import ProfileDropDown from './ProfileDropDown';
 
 const MainDiv = styled.div`
     width: 1920px;
@@ -21,27 +22,26 @@ const Title = styled.a`
 `
 
 const Profile = styled.div`
-    width: 55px; 
-    height: 55px;
     position: absolute; 
     margin-left: 1400px;
     margin-top: 10px;
 `
 
 export default function Header({ login }) {
-
+    const navigate = useNavigate();
     const [url, setUrl] = useState('');
+
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
 
         if (token) {
-            getInfo(token)
+            getInfo(token);
         }
     }, [])
 
 
-    const navigate = useNavigate();
+
 
     const home = () => {
         navigate('/');
@@ -78,7 +78,10 @@ export default function Header({ login }) {
             <MainDiv>
                 <Camera sx={{ width: '45px', height: "45px", marginTop: "10px", marginRight: "15px" }} />
                 <Title onClick={home}>셔터</Title>
-                {url ? <Profile onClick={() => navigate("/auth/signIn")}><img src={url} width= '55px' height= "55px" /></Profile> : <Profile onClick={() => navigate("/auth/signIn")}><AccountCircle sx={{ width: '55px', height: "55px" }} /></Profile>}
+                {url ?
+                    <Profile ><ProfileDropDown image={url} /></Profile>
+                    :
+                    <Profile onClick={() => navigate("/auth")} ><AccountCircle sx={{ width: '55px', height: "55px" }} /></Profile>}
             </MainDiv>
         </>
     )
