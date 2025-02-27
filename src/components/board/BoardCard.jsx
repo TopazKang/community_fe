@@ -111,17 +111,18 @@ const CountBox = styled.div`
     align-items: center;
 `
 
-export default function BoardCard({ id, title, content, tagList, writerImage, writer, count }) {
+export default function BoardCard({ id, postImagePath, title, content, tagList, writerImage, writer, count }) {
 
     const [postTitle, setPostTitle] = useState();
     const navigate = useNavigate();
 
     const readPost = () => {
-        navigate(`/standard-page/:${id}}`);
+        navigate(`/standard-page/${id}`);
     }
 
     const tags = JSON.parse(tagList);
     const profileUrl = API.BASE_URL + writerImage;
+    const postUrl = API.BASE_URL + postImagePath;
 
     useEffect(() => {
         if (title.length > 10) {
@@ -134,7 +135,7 @@ export default function BoardCard({ id, title, content, tagList, writerImage, wr
 
     return (
         <MainDiv onClick={readPost}>
-            <Image></Image>
+            <Image style={{backgroundImage: `url(${postUrl})`, backgroundSize: "cover"}}></Image>
             <InfoBox>
                 <Title>{postTitle}</Title>
                 <Content>{content}</Content>

@@ -132,7 +132,7 @@ export default function Board() {
                     <EditButton onClick={create}><Edit sx={{ width: '35px', height: '35px' }} /></EditButton>
                 </ButtonBox>
                 <CardBox>
-                    {data.map((post) => (<BoardCard key={`${post.postId}-${post.tags}`} id={post.postId} title={post.postTitle} content={post.postCreatedAt} tagList={post.tags} profileImage={post.userImage} writer={post.userNickname} writerImage={post.userImage} count={post.likesCount} />))}
+                    {data.map((post) => (<BoardCard key={`${post.postId}-${post.tags}`} id={post.postId} postImagePath={post.postImage} title={post.postTitle} content={post.postCreatedAt} tagList={post.tags} profileImage={post.userImage} writer={post.userNickname} writerImage={post.userImage} count={post.likesCount} />))}
                 </CardBox>
                 <PageBox>
                     <Pagination

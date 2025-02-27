@@ -88,6 +88,7 @@ export default function CreatePost({ origin, method, reload }) {
     const [value, setValue] = useState('');
     const [id, setId] = useState(0);
     const [postId, setPostId] = useState(0);
+    const [imagePath, setImagePath] = useState('');
 
     useEffect(() => {
         if (origin) {
@@ -141,6 +142,11 @@ export default function CreatePost({ origin, method, reload }) {
         }
     }
 
+    const handleImagePath = (image) => {
+        setImagePath(image);
+        console.log(image);
+    }
+
     async function postData() {
 
         const token = localStorage.getItem('accessToken');
@@ -148,7 +154,8 @@ export default function CreatePost({ origin, method, reload }) {
             title: title,
             content: value,
             category: "standard",
-            tags: JSON.stringify(tags)
+            tags: JSON.stringify(tags),
+            postImagePath: imagePath
         }
 
         console.log(JSON.stringify(tags).length)
@@ -234,7 +241,7 @@ export default function CreatePost({ origin, method, reload }) {
                     {origin && <Button onClick={method} variant='contained' sx={{ width: "114px", height: "31px", color: "black", backgroundColor: '#f59daa', borderRadius: "10px"}}>취소</Button>}
                     </ButtonBox>
             </ContentHeader>
-            <TextBox><CustomEditor value={value} method={handleQuillText} /></TextBox>
+            <TextBox><CustomEditor value={value} method={handleQuillText} setImagePath={handleImagePath} /></TextBox>
         </MainDiv>
     )
 }

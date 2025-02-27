@@ -18,7 +18,7 @@ const uploadImageToServer = async (file) => {
       }
     });
     const data = await response.text();
-    return API.BASE_URL+data; // 서버에서 반환된 이미지 URL 반환
+    return data; // 서버에서 반환된 이미지 URL 반환
   } catch (error) {
     console.error("Image upload failed:", error);
     return null; // 실패 시 null 반환
@@ -26,13 +26,13 @@ const uploadImageToServer = async (file) => {
 };
 
 // 이미지 핸들러 (버튼 클릭 시 호출됨)
-const imageHandler = async (quillRef) => {
+const imageHandler = async (quillRef, counterRef, setImagePath) => {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
-  
+
   input.click();
-  
+
   input.onchange = async () => {
     const file = input.files[0];
     if (file) {
@@ -40,19 +40,25 @@ const imageHandler = async (quillRef) => {
       if (imageUrl) {
         const quill = quillRef.current.getEditor();
         const range = quill.getSelection();
-        quill.insertEmbed(range.index, "image", imageUrl); // 이미지를 삽입
+        quill.insertEmbed(range.index, "image", API.BASE_URL + imageUrl); // 이미지를 삽입
+
+        if (counterRef.current) {
+          setImagePath(imageUrl);
+          counterRef.current = false;
+        }
       }
     }
   };
 };
 
-const CustomEditor = ({value, method}) => {
+const CustomEditor = ({ value, method, setImagePath }) => {
   const [editorContent, setEditorContent] = useState("");
+  const counterRef = useRef(true);
   const quillRef = useRef(null);
 
   useEffect(() => {
     setEditorContent(value);
-  },[value])
+  }, [value])
 
   // modules 설정 (useMemo 방식 사용)
   const modules = useMemo(() => {
@@ -64,7 +70,7 @@ const CustomEditor = ({value, method}) => {
           ["link", "image"], // 이미지 버튼 추가
         ],
         handlers: {
-          image: () => imageHandler(quillRef), // image 핸들러를 호출할 때 quillRef를 넘김
+          image: () => imageHandler(quillRef, counterRef, setImagePath), // image 핸들러를 호출할 때 quillRef를 넘김
         },
       },
     };
