@@ -36,10 +36,24 @@ jobs:
       # 🔹 5️⃣ Docker 이미지 빌드 & GHCR에 푸시
       - name: Build and Push Docker Image
         env:
-          GHCR_REPO: ghcr.io/topazkang/nginx-react
+          GHCR_REPO: ghcr.io/topazkang/shutter-fe-container
         run: |
           docker build --build-arg SERVER_NAME=${{ secrets.SERVER_NAME }} \
                        --build-arg BACKEND_HOST=${{ secrets.BACKEND_HOST }} \
                        --build-arg BACKEND_PORT=${{ secrets.BACKEND_PORT }} \
                        -t $GHCR_REPO:latest .
           docker push $GHCR_REPO:latest
+  pull-and-deploy:
+    runs-on: [ self-hosted, Linux, X64, shutter_fe ]
+    name: Deploy by Self-Hosted Runner
+    needs: build-and-push
+
+    steps:
+      - name: deploy by docker-compose
+        run: |
+          cd /home/ubuntu/shutter
+          docker-compose -f docker-compose.fe.yaml down
+          docker-compose -f docker-compose.fe.yaml pull
+          docker-compose -f docker-compose.fe.yaml up -d
+
+
