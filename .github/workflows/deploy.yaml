@@ -24,6 +24,7 @@ jobs:
       - name: Install Dependencies & Build React
         env:
           REACT_APP_SERVER_URL: ${{ secrets.REACT_APP_SERVER_URL }}
+          CI: false
         run: |
           npm install
           npm run build
