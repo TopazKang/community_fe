@@ -39,8 +39,6 @@ jobs:
           GHCR_REPO: ghcr.io/topazkang/shutter-fe-container
         run: |
           docker build --build-arg SERVER_NAME=${{ secrets.SERVER_NAME }} \
-                       --build-arg BACKEND_HOST=${{ secrets.BACKEND_HOST }} \
-                       --build-arg BACKEND_PORT=${{ secrets.BACKEND_PORT }} \
                        -t $GHCR_REPO:latest .
           docker push $GHCR_REPO:latest
   pull-and-deploy:
