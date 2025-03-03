@@ -36,7 +36,7 @@ jobs:
       # 🔹 5️⃣ Docker 이미지 빌드 & GHCR에 푸시
       - name: Build and Push Docker Image
         env:
-          GHCR_REPO: ghcr.io/${{ secrets.GHCR_OWNER }}/nginx-react
+          GHCR_REPO: ghcr.io/topazkang/nginx-react
         run: |
           docker build --build-arg SERVER_NAME=${{ secrets.SERVER_NAME }} \
                        --build-arg BACKEND_HOST=${{ secrets.BACKEND_HOST }} \
