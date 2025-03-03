@@ -38,7 +38,6 @@ jobs:
         env:
           GHCR_REPO: ghcr.io/community-FE-paz/nginx-react
         run: |
-          cd frontend/nginx
           docker build --build-arg SERVER_NAME=${{ secrets.SERVER_NAME }} \
                        --build-arg BACKEND_HOST=${{ secrets.BACKEND_HOST }} \
                        --build-arg BACKEND_PORT=${{ secrets.BACKEND_PORT }} \
