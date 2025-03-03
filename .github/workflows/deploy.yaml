@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: deploy by docker-compose
         run: |
-          cd /home/ubuntu/shutter
+          cd /home/paz/shutter
           docker-compose -f docker-compose.fe.yaml down
           docker-compose -f docker-compose.fe.yaml pull
           docker-compose -f docker-compose.fe.yaml up -d
