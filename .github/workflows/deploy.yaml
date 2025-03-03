@@ -1,0 +1,45 @@
+name: Build and Push React + Nginx to GHCR
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때 실행
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🔹 1️⃣ 리포지토리 체크아웃
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 🔹 2️⃣ Node.js 설정
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 🔹 3️⃣ React 빌드
+      - name: Install Dependencies & Build React
+        env:
+          REACT_APP_SERVER_URL: ${{ secrets.REACT_APP_SERVER_URL }}
+        run: |
+          npm install
+          npm run build
+
+      # 🔹 4️⃣ Docker 로그인 (GitHub Container Registry)
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_OWNER }} --password-stdin
+
+      # 🔹 5️⃣ Docker 이미지 빌드 & GHCR에 푸시
+      - name: Build and Push Docker Image
+        env:
+          GHCR_REPO: ghcr.io/community-FE-paz/nginx-react
+        run: |
+          cd frontend/nginx
+          docker build --build-arg SERVER_NAME=${{ secrets.SERVER_NAME }} \
+                       --build-arg BACKEND_HOST=${{ secrets.BACKEND_HOST }} \
+                       --build-arg BACKEND_PORT=${{ secrets.BACKEND_PORT }} \
+                       -t $GHCR_REPO:latest .
+          docker push $GHCR_REPO:latest
